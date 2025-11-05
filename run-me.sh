@@ -1,9 +1,14 @@
 #!/bin/bash
 set -e
 
-# -----------------------------
-# Script para rodar o Makefile completo
-# -----------------------------
+# Instalação de dependências (Alpine)
+sudo apt update
+
+# Instala Node.js, npm, make e Docker
+sudo apt install -y nodejs npm make docker.io
+
+# Instala yarn globalmente
+sudo npm install -g yarn
 
 echo "Build da aplicação..."
 make build
@@ -16,4 +21,4 @@ make create-stack
 
 echo "Aguardando inicialização da instância..."
 IP=$(make get-ip)
-echo "Deploy concluído! Acesse a aplicação em: http://$IP"
+echo "Deploy concluído! Acesse a aplicação em: http://$IP:8000"
