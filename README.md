@@ -1,100 +1,83 @@
-# Jewelry App
+🚀 Tecnologias
 
-Aplicação Vue.js para exibição de joias com deploy automatizado no Azure usando Terraform.
+Vue.js 3
+ — Framework frontend
 
-## Pré-requisitos
+Docker
+ — Containerização
 
-- Node.js 18+
-- Docker
-- Terraform
-- Azure CLI (para deploy)
+AWS CloudFormation
+ — Infraestrutura como código
 
-## Execução Local
+Makefile
+ — Automação de comandos
 
-### Desenvolvimento
-```bash
+⚙️ Pré-requisitos
+
+Antes de começar, garanta que você tenha instalado:
+*Para testes locais*
+Node.js 18+
+Docker
+
+
+🧩 Execução Local
+🔧 Modo Desenvolvimento
 # Instalar dependências
-npm install
+yarn install
 
-# Executar em modo desenvolvimento
-npm run dev
-```
-Acesse: http://localhost:5173
+# Executar o servidor de desenvolvimento
+yarn dev
 
-### Docker Local
-```bash
-# Usando Makefile
+
+Acesse em: http://localhost:5173
+
+🐳 Usando Docker
+# Via Makefile
 make docker-run
 
 # Ou manualmente
-docker build -t jewelry-app .
-docker run -p 8080:80 jewelry-app
-```
-Acesse: http://localhost:8080
+docker compose up -d
 
-## Deploy no Azure
 
-### Configuração Inicial
-```bash
-# Login no Azure
-az login
+Acesse em: http://localhost:8080
 
-# Configurar credenciais (se necessário)
-az account set --subscription "sua-subscription-id"
-```
+☁️ Deploy na AWS
+Passo a passo
 
-### Deploy Automatizado
-```bash
-# Deploy completo (build + infraestrutura + aplicação)
-make azure-deploy
-```
+Clone o repositório dentro do seu CLI
 
-### Deploy Manual
-```bash
-# 1. Inicializar Terraform
-make init
+git clone https://github.com/mathewcandido/Desafio-proway-devops.git
+cd Desafio-proway-devops
 
-# 2. Planejar mudanças
-make plan
+Crie uma key pair
 
-# 3. Aplicar infraestrutura
-make apply
+aws ec2 create-key-pair --key-name matheus-keypair --query "KeyMaterial" --output text > matheus-keypair.pem
+chmod 400 matheus-keypair.pem
 
-# 4. Build e deploy da aplicação
-make deploy
-```
 
-## Comandos Úteis
+💡 Você pode alterar o nome da key pair. Apenas lembre-se de atualizar o nome no arquivo Makefile.
 
-```bash
-# Build da aplicação
-make build
+Execute cp -r <sua-keypair> ./Desafio-proway-devops 
 
-# Limpar arquivos temporários
-make clean
+Execute o script de deploy
 
-# Destruir infraestrutura Azure
-make azure-destroy
-```
+./run-me.sh
 
-## Estrutura do Projeto
 
-```
-├── src/           # Código fonte Vue.js
-├── main.tf        # Configuração Terraform
-├── Dockerfile     # Container da aplicação
-├── Makefile       # Comandos automatizados
-└── deploy.sh      # Script de deploy
-```
+Após a execução, o terminal exibirá o IP público da instância.
+Acesse:
 
-## Infraestrutura Azure
+http://<SEU-IP>:8000
 
-O Terraform provisiona:
-- Resource Group
-- Virtual Network e Subnet
-- Network Security Group
-- VM Linux com Docker
-- IP Público
 
-A aplicação roda na porta 8080 da VM.
-# Desafio-proway-devops
+🧠 Sobre o Projeto
+
+Este projeto foi desenvolvido como parte do Desafio Proway DevOps, com foco em:
+
+Provisionamento de uma aplicação que estaria em outra cloud - Azure
+
+Deploy automatizado na AWS usando CloudFormation;
+
+Automação via Makefile e scripts Shell;
+
+Uso de boas práticas de DevOps.
