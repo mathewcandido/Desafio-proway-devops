@@ -1,13 +1,8 @@
 #!/bin/bash
 set -e
 
-# Instalação de dependências (Alpine)
-sudo apt update
-
-# Instala Node.js, npm, make e Docker
-sudo apt install -y nodejs npm make docker.io
-
-# Instala yarn globalmente
+sudo yum update -y
+sudo yum install -y nodejs npm make docker
 sudo npm install -g yarn
 
 echo "Build da aplicação..."
