@@ -15,8 +15,8 @@ VPC_ID = vpc-06786ee7f7a163059
 
 build:
 	@echo "Instalando dependências e gerando build da aplicação..."
-	npm install
-	npm run build
+	yarn install
+	yarn build
 	@echo "Build concluído!"
 
 docker-build:
