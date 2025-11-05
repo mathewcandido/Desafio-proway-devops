@@ -1,0 +1,69 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Stack EC2 + Docker com VPC/Subnet especificados
+
+Parameters:
+  KeyName:
+    Description: Nome da chave EC2
+    Type: AWS::EC2::KeyPair::KeyName
+
+  RepoUrl:
+    Description: https://github.com/mathewcandido/Desafio-proway-devops
+    Type: String
+
+  Branch:
+    Description: Branch do repositório Git
+    Type: String
+    Default: main
+
+  SubnetId:
+    Description: Subnet onde a instância será criada
+    Type: AWS::EC2::Subnet::Id
+
+  VpcId:
+    Description: VPC associada à Subnet
+    Type: AWS::EC2::VPC::Id
+
+Resources:
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Permitir HTTP e SSH
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 80
+          ToPort: 80
+          IpProtocol: tcp
+        - CidrIp: 0.0.0.0/0
+          FromPort: 22
+          ToPort: 22
+          IpProtocol: tcp
+
+  AppInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t3.micro
+      KeyName: !Ref KeyName
+      ImageId: ami-0fc5d935ebf8bc3bc
+      SubnetId: !Ref SubnetId
+      SecurityGroupIds:
+        - !Ref InstanceSecurityGroup
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          apt-get update -y
+          apt-get install -y git docker.io docker-compose
+          systemctl enable docker
+          systemctl start docker
+          cd /home/ubuntu || cd /root
+          git clone --branch ${Branch} ${RepoUrl} app
+          cd app
+          docker-compose up -d
+
+Outputs:
+  InstanceId:
+    Description: ID da instância EC2
+    Value: !Ref AppInstance
+  PublicIP:
+    Description: IP público da instância
+    Value: !GetAtt AppInstance.PublicIp
